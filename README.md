@@ -1,6 +1,22 @@
 # Sistema Oficina de Agua
+# Parcial 2 — Mejoras Implementadas
 
-Sistema web para digitalizar el control de una oficina comunitaria de agua potable: mantenimiento de tarifas, control de clientes, registro de lecturas de contadores casa por casa, cálculo automático de consumo y cobro, generación de recibo imprimible, control de pagos en oficina y un dashboard de estado de cuenta de clientes.
+Este documento resume las mejoras seleccionadas del listado del parcial, implementadas sobre el repositorio del proyecto (fork personal, rama `feature/parcial2`).
+
+## Mejoras implementadas
+
+### 3. Indicador de fuerza de contraseña
+**Ubicación:** Formulario de Usuarios (`app/Views/usuarios/form.php`)
+
+Muestra en tiempo real, mientras se escribe, si la contraseña es Débil / Media / Fuerte, mediante una barra de progreso con color.
+Evalúa longitud, mayúsculas, números y símbolos. JavaScript puro, sin librerías adicionales.
+
+### 6. Contador de caracteres con límite máximo
+**Ubicación:** Formulario de Clientes, campo Dirección (`app/Views/clientes/form.php`)
+
+Muestra un contador en vivo (`X/255 caracteres`) que se actualiza con cada tecla. Cambia de color como alerta visual: gris en uso normal, amarillo al acercarse al límite (80%+), y rojo al alcanzarlo.
+
+---
 
 [Tablero de Jira](https://danysspace.atlassian.net/jira/software/projects/SCRUM/boards/1)
 
