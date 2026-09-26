@@ -48,6 +48,9 @@
                 <div class="mt-3">
                     <label for="direccion" class="form-label">Dirección</label>
                     <textarea class="form-control" id="direccion" name="direccion" rows="3" maxlength="255" required><?= esc($direccion) ?></textarea>
+                    <div class="d-flex justify-content-end mt-1">
+                        <small id="direccionContador" class="form-text">0/255 caracteres</small>
+                    </div>
                 </div>
 
                 <div class="mt-4 d-flex gap-2">
@@ -60,4 +63,32 @@
         </div>
     </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script>
+    const direccionInput = document.getElementById('direccion');
+    const direccionContador = document.getElementById('direccionContador');
+    const LIMITE_DIRECCION = 255; 
+
+    function actualizarContador() {
+        const longitud = direccionInput.value.length;
+        direccionContador.textContent = longitud + '/' + LIMITE_DIRECCION + ' caracteres';
+
+        direccionContador.classList.remove('text-muted', 'text-warning', 'text-danger');
+
+        if (longitud >= LIMITE_DIRECCION) {
+            direccionContador.classList.add('text-danger');
+        } else if (longitud >= LIMITE_DIRECCION * 0.8) {
+            direccionContador.classList.add('text-warning');
+        } else {
+            direccionContador.classList.add('text-muted');
+        }
+    }
+
+    direccionInput.addEventListener('input', actualizarContador);
+
+    // Inicializa el contador al cargar la página (al editar)
+    actualizarContador();
+</script>
 <?= $this->endSection() ?>
