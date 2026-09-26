@@ -41,16 +41,23 @@ $rolId = old('rol_id', $usuario['rol_id'] ?? '');
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-md-6">
-                <label for="password" class="form-label">Contraseña</label>
-                <div class="input-group">
-                    <input type="password" class="form-control" id="password" name="password" minlength="6" maxlength="72" <?= $esEdicion ? '' : 'required' ?>>
-                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password" aria-label="Mostrar contraseña" title="Mostrar contraseña">
-                        <i class="fas fa-eye" aria-hidden="true"></i>
-                    </button>
+
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" minlength="6" maxlength="72" <?= $esEdicion ? '' : 'required' ?>>
+                        <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password" aria-label="Mostrar contraseña" title="Mostrar contraseña">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <div class="progress mt-2" style="height: 6px;">
+                        <div id="passwordStrengthBar" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+                    </div>
+                    <div id="passwordStrengthText" class="form-text"></div>
+
+                    <?php if ($esEdicion): ?><div class="form-text">Déjala vacía para conservar la contraseña actual.</div><?php endif; ?>
                 </div>
-                <?php if ($esEdicion): ?><div class="form-text">Déjala vacía para conservar la contraseña actual.</div><?php endif; ?>
-            </div>
             <div class="col-md-6">
                 <label for="password_confirmacion" class="form-label">Confirmar contraseña</label>
                 <div class="input-group">
@@ -82,6 +89,55 @@ document.querySelectorAll('.toggle-password').forEach(function (boton) {
         this.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
         this.setAttribute('title', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
     });
+});
+
+// Indicador de fuerza de contraseña
+const passwordInput = document.getElementById('password');
+const strengthBar = document.getElementById('passwordStrengthBar');
+const strengthText = document.getElementById('passwordStrengthText');
+
+function evaluarFuerza(password) {
+    let puntaje = 0;
+
+    if (password.length >= 8) puntaje++;
+    if (password.length >= 12) puntaje++;
+    if (/[A-Z]/.test(password)) puntaje++;
+    if (/[0-9]/.test(password)) puntaje++;
+    if (/[^A-Za-z0-9]/.test(password)) puntaje++;
+
+    return puntaje;
+}
+
+passwordInput.addEventListener('input', function () {
+    const password = this.value;
+
+    if (password.length === 0) {
+        strengthBar.style.width = '0%';
+        strengthBar.className = 'progress-bar';
+        strengthText.textContent = '';
+        return;
+    }
+
+    const puntaje = evaluarFuerza(password);
+    let porcentaje, colorClase, etiqueta;
+
+    if (puntaje <= 2) {
+        porcentaje = 33;
+        colorClase = 'bg-danger';
+        etiqueta = 'Débil';
+    } else if (puntaje <= 4) {
+        porcentaje = 66;
+        colorClase = 'bg-warning';
+        etiqueta = 'Media';
+    } else {
+        porcentaje = 100;
+        colorClase = 'bg-success';
+        etiqueta = 'Fuerte';
+    }
+
+    strengthBar.style.width = porcentaje + '%';
+    strengthBar.className = 'progress-bar ' + colorClase;
+    strengthText.textContent = 'Fortaleza: ' + etiqueta;
 });
 </script>
 <?= $this->endSection() ?>
